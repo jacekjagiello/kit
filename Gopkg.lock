@@ -2,6 +2,12 @@
 
 
 [[projects]]
+  name = "git.apache.org/thrift.git"
+  packages = ["lib/go/thrift"]
+  revision = "327ebb6c2b6df8bf075da02ef45a2a034e9b79ba"
+  version = "0.11.0"
+
+[[projects]]
   name = "github.com/golang-migrate/migrate"
   packages = [
     ".",
@@ -43,9 +49,39 @@
   packages = ["."]
   revision = "b8a9be070da40449e501c3c4730a889e42d87a9e"
 
+[[projects]]
+  name = "go.opencensus.io"
+  packages = [
+    "exporter/jaeger",
+    "exporter/jaeger/internal/gen-go/jaeger",
+    "internal",
+    "trace",
+    "trace/internal"
+  ]
+  revision = "0095aec66ae14801c6711210f6f0716411cefdd3"
+  version = "v0.8.0"
+
+[[projects]]
+  branch = "master"
+  name = "golang.org/x/net"
+  packages = ["context"]
+  revision = "500e7a4f953ddaf55d316b4d3adc516aa0379622"
+
+[[projects]]
+  branch = "master"
+  name = "golang.org/x/sync"
+  packages = ["semaphore"]
+  revision = "1d60e4601c6fd243af51cc01ddf169918a5407ca"
+
+[[projects]]
+  branch = "master"
+  name = "google.golang.org/api"
+  packages = ["support/bundler"]
+  revision = "9c79deebf7496e355d7e95d82d4af1fe4e769b2f"
+
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "d207874c0aab56d6d202a5a85d17bb967c5a13a7f9e653a5d8938578e4d7eae6"
+  inputs-digest = "d26311b043228ad60f637b655a9401fa244752bf39a82221ebf1a972821e5fb4"
   solver-name = "gps-cdcl"
   solver-version = 1
