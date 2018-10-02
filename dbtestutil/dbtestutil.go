@@ -2,9 +2,12 @@ package dbtestutil
 
 import (
 	"fmt"
-	"os"
-	"github.com/olekukonko/tablewriter"
+	"github.com/golang-migrate/migrate"
+	"github.com/golang-migrate/migrate/database/postgres"
+	_ "github.com/golang-migrate/migrate/source/file"
 	"github.com/jmoiron/sqlx"
+	"github.com/olekukonko/tablewriter"
+	"os"
 )
 
 type DBOptions struct {
@@ -18,7 +21,7 @@ type DBOptions struct {
 
 type DBHelper struct {
 	DB            *sqlx.DB
-	migrationsDir string
+	migrationTool *migrate.Migrate
 }
 
 func New(opt DBOptions) *DBHelper {
@@ -35,14 +38,15 @@ func New(opt DBOptions) *DBHelper {
 		opt.Port = 5432
 	}
 
+	dbConnection := createConnection(opt)
 	return &DBHelper{
-		DB:            createConnection(opt),
-		migrationsDir: opt.MigrationsDir,
+		DB:            dbConnection,
+		migrationTool: newMigrationTool(dbConnection, opt.MigrationsDir),
 	}
 }
 
 func (d *DBHelper) CreateSchema() {
-	err := MigrateDatabaseUp(d.DB, d.migrationsDir)
+	err := d.migrationTool.Up()
 	if err != nil {
 		if err.Error() == "no change" {
 			return
@@ -52,17 +56,19 @@ func (d *DBHelper) CreateSchema() {
 }
 
 func (d *DBHelper) DropSchema() {
-	err := DropDatabase(d.DB, d.migrationsDir)
+	err := d.migrationTool.Drop()
 	if err != nil {
 		panic(err)
 	}
 }
 
 func (d *DBHelper) SpoilConnection() {
-	err := d.DB.Close()
-	if err != nil {
-		panic(err)
-	}
+	d.DropSchema()
+}
+
+func (d *DBHelper) PrepareDatabase() func() {
+	d.CreateSchema()
+	return d.DropSchema
 }
 
 func (d *DBHelper) PreviewTable(tableName string) {
@@ -77,7 +83,7 @@ func (d *DBHelper) PreviewTable(tableName string) {
 
 	for rows.Next() {
 		columnPointers := make([]interface{}, len(cols))
-		for i, _ := range columns {
+		for i := range columns {
 			columnPointers[i] = &columns[i]
 		}
 
@@ -104,4 +110,21 @@ func createConnection(db DBOptions) *sqlx.DB {
 		db.Host, db.Port, db.Name, db.User, db.Password,
 	)
 	return sqlx.MustConnect("postgres", conn)
+}
+
+func newMigrationTool(db *sqlx.DB, migrationsFolderPath string) *migrate.Migrate {
+	driver, err := postgres.WithInstance(db.DB, &postgres.Config{})
+	if err != nil {
+		panic(err)
+	}
+	migrationTool, err := migrate.NewWithDatabaseInstance(
+		fmt.Sprintf("file://%s", migrationsFolderPath),
+		"postgres",
+		driver,
+	)
+	if err != nil {
+		panic(err)
+	}
+
+	return migrationTool
 }
