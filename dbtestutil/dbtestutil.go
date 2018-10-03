@@ -8,12 +8,13 @@ import (
 	"github.com/jmoiron/sqlx"
 	"github.com/olekukonko/tablewriter"
 	"os"
+	"time"
 )
 
 type DBOptions struct {
 	Host          string
-	Port          int
 	Name          string
+	Port          int
 	User          string
 	Password      string
 	MigrationsDir string
@@ -37,11 +38,14 @@ func New(opt DBOptions) *DBHelper {
 	if opt.Port == 0 {
 		opt.Port = 5432
 	}
+	if opt.Name == "" {
+		opt.Name = createDatabase(opt)
+	}
+	db := createConnection(opt)
 
-	dbConnection := createConnection(opt)
 	return &DBHelper{
-		DB:            dbConnection,
-		migrationTool: newMigrationTool(dbConnection, opt.MigrationsDir),
+		DB:            db,
+		migrationTool: newMigrationTool(db, opt.MigrationsDir),
 	}
 }
 
@@ -104,11 +108,26 @@ func (d *DBHelper) PreviewTable(tableName string) {
 	table.Render()
 }
 
+func createDatabase(opt DBOptions) string {
+	name := fmt.Sprintf("db_test_%d", time.Now().UnixNano())
+	db := createConnection(opt)
+	defer db.Close()
+	db.MustExec(fmt.Sprintf("CREATE DATABASE %s", name))
+	return name
+}
+
 func createConnection(db DBOptions) *sqlx.DB {
 	conn := fmt.Sprintf(
 		"host=%s port=%d dbname=%s user=%s password=%s sslmode=disable",
 		db.Host, db.Port, db.Name, db.User, db.Password,
 	)
+	if db.Name == "" {
+		conn = fmt.Sprintf(
+			"host=%s port=%d user=%s password=%s sslmode=disable",
+			db.Host, db.Port, db.User, db.Password,
+		)
+	}
+
 	return sqlx.MustConnect("postgres", conn)
 }
 
