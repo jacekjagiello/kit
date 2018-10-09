@@ -6,9 +6,6 @@ pipeline:
   test:
     image: golang
     commands:
-      - export PATH=$PATH:$GOPATH/bin
-      - go get -u github.com/golang/dep/cmd/dep
-      - dep ensure --vendor-only
-      - go test $(go list ./... | grep -v /vendor/)
+      - go test ./...
 
 branches: master

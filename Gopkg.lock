@@ -2,10 +2,11 @@
 
 
 [[projects]]
+  branch = "master"
   name = "git.apache.org/thrift.git"
   packages = ["lib/go/thrift"]
-  revision = "327ebb6c2b6df8bf075da02ef45a2a034e9b79ba"
-  version = "0.11.0"
+  revision = "d566da7739c9aae63fe7fc9d267887fa73e5dda7"
+  source = "github.com/apache/thrift"
 
 [[projects]]
   name = "github.com/golang-migrate/migrate"
@@ -16,8 +17,8 @@
     "source",
     "source/file"
   ]
-  revision = "22f249514de9aa3f8a720a7cabbdd45d294f83a1"
-  version = "v3.2.0"
+  revision = "93d53a5ae84d81945eedadfe8f6865530d61d51c"
+  version = "v3.5.1"
 
 [[projects]]
   branch = "master"
@@ -26,46 +27,48 @@
     ".",
     "reflectx"
   ]
-  revision = "2aeb6a910c2b94f2d5eb53d9895d80e27264ec41"
+  revision = "0dae4fefe7c0e190f7b5a78dac28a1c82cc8d849"
 
 [[projects]]
-  branch = "master"
   name = "github.com/lib/pq"
   packages = [
     ".",
     "oid"
   ]
-  revision = "d34b9ff171c21ad295489235aec8b6626023cd04"
+  revision = "4ded0e9383f75c197b3a2aaa6d590ac52df6fd79"
+  version = "v1.0.0"
 
 [[projects]]
   name = "github.com/mattn/go-runewidth"
   packages = ["."]
-  revision = "9e777a8366cce605130a531d2cd6363d07ad7317"
-  version = "v0.0.2"
+  revision = "ce7b0b5c7b45a81508558cd1dba6bb1e4ddb51bb"
+  version = "v0.0.3"
 
 [[projects]]
   branch = "master"
   name = "github.com/olekukonko/tablewriter"
   packages = ["."]
-  revision = "b8a9be070da40449e501c3c4730a889e42d87a9e"
+  revision = "be2c049b30ccd4d3fd795d6bf7dce74e42eeedaa"
 
 [[projects]]
   name = "go.opencensus.io"
   packages = [
+    ".",
     "exporter/jaeger",
     "exporter/jaeger/internal/gen-go/jaeger",
     "internal",
     "trace",
-    "trace/internal"
+    "trace/internal",
+    "trace/tracestate"
   ]
-  revision = "0095aec66ae14801c6711210f6f0716411cefdd3"
-  version = "v0.8.0"
+  revision = "79993219becaa7e29e3b60cb67f5b8e82dee11d6"
+  version = "v0.17.0"
 
 [[projects]]
   branch = "master"
   name = "golang.org/x/net"
   packages = ["context"]
-  revision = "500e7a4f953ddaf55d316b4d3adc516aa0379622"
+  revision = "146acd28ed5894421fb5aac80ca93bc1b1f46f87"
 
 [[projects]]
   branch = "master"
@@ -77,11 +80,11 @@
   branch = "master"
   name = "google.golang.org/api"
   packages = ["support/bundler"]
-  revision = "9c79deebf7496e355d7e95d82d4af1fe4e769b2f"
+  revision = "c21459d81882ee61fcd6631fb94dbd9a29bd4377"
 
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "d26311b043228ad60f637b655a9401fa244752bf39a82221ebf1a972821e5fb4"
+  inputs-digest = "aeb4255fe132b12450d5606de96fb29d032a55e8fd729c5a1539e787dc554bdb"
   solver-name = "gps-cdcl"
   solver-version = 1
